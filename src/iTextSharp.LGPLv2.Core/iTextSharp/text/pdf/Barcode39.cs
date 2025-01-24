@@ -1,8 +1,4 @@
-using System.Drawing;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
-
-namespace iTextSharp.text.pdf;
+﻿namespace iTextSharp.text.pdf;
 
 /// <summary>
 ///     Implements the code 39 and code 39 extended. The default parameters are:
@@ -219,49 +215,6 @@ public class Barcode39 : Barcode
         }
 
         return ret;
-    }
-
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
-    {
-        var bCode = code;
-        if (extended)
-        {
-            bCode = GetCode39Ex(code);
-        }
-
-        if (generateChecksum)
-        {
-            bCode += GetChecksum(bCode);
-        }
-
-        var len = bCode.Length + 2;
-        var nn = (int)n;
-        var fullWidth = len * (6 + 3 * nn) + (len - 1);
-        var height = (int)barHeight;
-        var bmp = new SKBitmap(fullWidth, height);
-        var bars = GetBarsCode39(bCode);
-        for (var h = 0; h < height; ++h)
-        {
-            var print = true;
-            var ptr = 0;
-            for (var k = 0; k < bars.Length; ++k)
-            {
-                var w = bars[k] == 0 ? 1 : nn;
-                var c = background;
-                if (print)
-                {
-                    c = foreground;
-                }
-
-                print = !print;
-                for (var j = 0; j < w; ++j)
-                {
-                    bmp.SetPixel(ptr++, h, c.ToSKColor());
-                }
-            }
-        }
-
-        return bmp;
     }
 
     /// <summary>

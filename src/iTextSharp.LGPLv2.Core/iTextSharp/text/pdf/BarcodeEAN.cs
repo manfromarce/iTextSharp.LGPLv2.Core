@@ -1,8 +1,4 @@
-using System.Drawing;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
-
-namespace iTextSharp.text.pdf;
+﻿namespace iTextSharp.text.pdf;
 
 /// <summary>
 ///     Generates barcodes in several formats: EAN13, EAN8, UPCA, UPCE,
@@ -787,77 +783,6 @@ public class BarcodeEan : Barcode
         bars[pb++] = 1;
 
         return bars;
-    }
-
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
-    {
-        var width = 0;
-        byte[] bars = null;
-
-        switch (codeType)
-        {
-            case EAN13:
-                bars = GetBarsEan13(code);
-                width = 11 + 12 * 7;
-
-                break;
-            case EAN8:
-                bars = GetBarsEan8(code);
-                width = 11 + 8 * 7;
-
-                break;
-            case UPCA:
-                bars = GetBarsEan13("0" + code);
-                width = 11 + 12 * 7;
-
-                break;
-            case UPCE:
-                bars = GetBarsUpce(code);
-                width = 9 + 6 * 7;
-
-                break;
-            case SUPP2:
-                bars = GetBarsSupplemental2(code);
-                width = 6 + 2 * 7;
-
-                break;
-            case SUPP5:
-                bars = GetBarsSupplemental5(code);
-                width = 4 + 5 * 7 + 4 * 2;
-
-                break;
-            default:
-                throw new InvalidOperationException(message: "Invalid code type.");
-        }
-
-        var height = (int)barHeight;
-        var bmp = new SKBitmap(width, height);
-
-        for (var h = 0; h < height; ++h)
-        {
-            var print = true;
-            var ptr = 0;
-
-            for (var k = 0; k < bars.Length; ++k)
-            {
-                int w = bars[k];
-                var c = background;
-
-                if (print)
-                {
-                    c = foreground;
-                }
-
-                print = !print;
-
-                for (var j = 0; j < w; ++j)
-                {
-                    bmp.SetPixel(ptr++, h, c.ToSKColor());
-                }
-            }
-        }
-
-        return bmp;
     }
 
     /// <summary>

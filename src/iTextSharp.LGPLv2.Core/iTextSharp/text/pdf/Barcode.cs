@@ -1,7 +1,4 @@
-using System.Drawing;
-using SkiaSharp;
-
-namespace iTextSharp.text.pdf;
+﻿namespace iTextSharp.text.pdf;
 
 /// <summary>
 ///     Base class containing properties and methods commom to all
@@ -325,8 +322,6 @@ public abstract class Barcode
 
         set => x = value;
     }
-
-    public abstract SKBitmap CreateDrawingImage(Color foreground, Color background);
 
     /// <summary>
     ///     Creates an  Image  with the barcode.

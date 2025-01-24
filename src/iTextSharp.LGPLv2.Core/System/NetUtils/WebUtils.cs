@@ -1,4 +1,8 @@
+﻿#if NET40
 using System.Net;
+#else
+using System.Net.Http;
+#endif
 using iTextSharp.text;
 
 namespace iTextSharp.LGPLv2.Core.System.NetUtils;
@@ -18,11 +22,16 @@ public static class WebUtils
             return new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
-        var w = WebRequest.Create(url);
 #if NET40
-            return w.GetResponse().GetResponseStream();
+        var w = WebRequest.Create(url);
+        return w.GetResponse().GetResponseStream();
 #else
-        return w.GetResponseAsync().GetAwaiter().GetResult().GetResponseStream();
+        using (var client = new HttpClient())
+        {
+            var response = client.GetAsync(url).GetAwaiter().GetResult();
+            response.EnsureSuccessStatusCode();
+            return response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+        }
 #endif
     }
 

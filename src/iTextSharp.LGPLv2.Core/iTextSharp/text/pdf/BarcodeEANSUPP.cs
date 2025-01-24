@@ -1,7 +1,4 @@
-using System.Drawing;
-using SkiaSharp;
-
-namespace iTextSharp.text.pdf;
+﻿namespace iTextSharp.text.pdf;
 
 /// <summary>
 ///     This class takes 2 barcodes, an EAN/UPC and a supplemental
@@ -51,9 +48,6 @@ public class BarcodeEansupp : Barcode
             return rect;
         }
     }
-
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background) =>
-        throw new InvalidOperationException("The two barcodes must be composed externally.");
 
     /// <summary>
     ///     Places the barcode in a  PdfContentByte . The

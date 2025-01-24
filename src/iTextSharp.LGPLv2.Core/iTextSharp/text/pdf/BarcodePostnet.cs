@@ -1,8 +1,4 @@
-using System.Drawing;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
-
-namespace iTextSharp.text.pdf;
+﻿namespace iTextSharp.text.pdf;
 
 /// <summary>
 ///     Implements the Postnet and Planet barcodes. The default parameters are:
@@ -121,81 +117,6 @@ public class BarcodePostnet : Barcode
         }
 
         return bars;
-    }
-
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
-    {
-        var barWidth = (int)x;
-
-        if (barWidth <= 0)
-        {
-            barWidth = 1;
-        }
-
-        var barDistance = (int)n;
-
-        if (barDistance <= barWidth)
-        {
-            barDistance = barWidth + 1;
-        }
-
-        var barShort = (int)size;
-
-        if (barShort <= 0)
-        {
-            barShort = 1;
-        }
-
-        var barTall = (int)barHeight;
-
-        if (barTall <= barShort)
-        {
-            barTall = barShort + 1;
-        }
-
-        var bars = GetBarsPostnet(code);
-        var width = bars.Length * barDistance;
-        byte flip = 1;
-
-        if (codeType == PLANET)
-        {
-            flip = 0;
-            bars[0] = 0;
-            bars[bars.Length - 1] = 0;
-        }
-
-        var bmp = new SKBitmap(width, barTall);
-        var seg1 = barTall - barShort;
-
-        for (var i = 0; i < seg1; ++i)
-        {
-            var idx = 0;
-
-            for (var k = 0; k < bars.Length; ++k)
-            {
-                var dot = bars[k] == flip;
-
-                for (var j = 0; j < barDistance; ++j)
-                {
-                    bmp.SetPixel(idx++, i, dot && j < barWidth ? foreground.ToSKColor() : background.ToSKColor());
-                }
-            }
-        }
-
-        for (var i = seg1; i < barTall; ++i)
-        {
-            var idx = 0;
-
-            for (var k = 0; k < bars.Length; ++k)
-            {
-                for (var j = 0; j < barDistance; ++j)
-                {
-                    bmp.SetPixel(idx++, i, j < barWidth ? foreground.ToSKColor() : background.ToSKColor());
-                }
-            }
-        }
-
-        return bmp;
     }
 
     /// <summary>

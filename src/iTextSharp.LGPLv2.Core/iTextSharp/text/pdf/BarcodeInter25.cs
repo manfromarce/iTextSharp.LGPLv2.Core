@@ -1,7 +1,4 @@
-using System.Drawing;
-using System.Text;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
+﻿using System.Text;
 
 namespace iTextSharp.text.pdf;
 
@@ -227,49 +224,6 @@ public class BarcodeInter25 : Barcode
         }
 
         return sb.ToString();
-    }
-
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
-    {
-        var bCode = KeepNumbers(code);
-
-        if (generateChecksum)
-        {
-            bCode += GetChecksum(bCode);
-        }
-
-        var len = bCode.Length;
-        var nn = (int)n;
-        var fullWidth = len * (3 + 2 * nn) + 6 + nn;
-        var bars = GetBarsInter25(bCode);
-        var height = (int)barHeight;
-        var bmp = new SKBitmap(fullWidth, height);
-
-        for (var h = 0; h < height; ++h)
-        {
-            var print = true;
-            var ptr = 0;
-
-            for (var k = 0; k < bars.Length; ++k)
-            {
-                var w = bars[k] == 0 ? 1 : nn;
-                var c = background;
-
-                if (print)
-                {
-                    c = foreground;
-                }
-
-                print = !print;
-
-                for (var j = 0; j < w; ++j)
-                {
-                    bmp.SetPixel(ptr++, h, c.ToSKColor());
-                }
-            }
-        }
-
-        return bmp;
     }
 
     /// <summary>

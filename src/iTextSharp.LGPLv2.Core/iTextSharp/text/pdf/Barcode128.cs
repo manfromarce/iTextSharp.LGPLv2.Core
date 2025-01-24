@@ -1,8 +1,5 @@
-using System.Drawing;
-using System.Text;
+﻿using System.Text;
 using System.util;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -1130,61 +1127,6 @@ public class Barcode128 : Barcode
         }
 
         return buf.ToString();
-    }
-
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
-    {
-        string bCode;
-
-        if (codeType == CODE128_RAW)
-        {
-            var idx = code.IndexOf(value: '\uffff', StringComparison.Ordinal);
-
-            if (idx >= 0)
-            {
-                bCode = code.Substring(startIndex: 0, idx);
-            }
-            else
-            {
-                bCode = code;
-            }
-        }
-        else
-        {
-            bCode = GetRawText(code, codeType == CODE128_UCC);
-        }
-
-        var len = bCode.Length;
-        var fullWidth = (len + 2) * 11 + 2;
-        var bars = GetBarsCode128Raw(bCode);
-        var height = (int)barHeight;
-        var bmp = new SKBitmap(fullWidth, height);
-
-        for (var h = 0; h < height; ++h)
-        {
-            var print = true;
-            var ptr = 0;
-
-            for (var k = 0; k < bars.Length; ++k)
-            {
-                int w = bars[k];
-                var c = background;
-
-                if (print)
-                {
-                    c = foreground;
-                }
-
-                print = !print;
-
-                for (var j = 0; j < w; ++j)
-                {
-                    bmp.SetPixel(ptr++, h, c.ToSKColor());
-                }
-            }
-        }
-
-        return bmp;
     }
 
     /// <summary>

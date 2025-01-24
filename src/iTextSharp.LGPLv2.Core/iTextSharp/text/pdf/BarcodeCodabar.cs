@@ -1,8 +1,4 @@
-using System.Drawing;
-using iTextSharp.LGPLv2.Core.System.Drawing;
-using SkiaSharp;
-
-namespace iTextSharp.text.pdf;
+﻿namespace iTextSharp.text.pdf;
 
 /// <summary>
 ///     Implements the code codabar. The default parameters are:
@@ -196,54 +192,6 @@ public class BarcodeCodabar : Barcode
         }
 
         return bars;
-    }
-
-    public override SKBitmap CreateDrawingImage(Color foreground, Color background)
-    {
-        var fullCode = code;
-        if (generateChecksum && checksumText)
-        {
-            fullCode = CalculateChecksum(code);
-        }
-
-        if (!startStopText)
-        {
-            fullCode = fullCode.Substring(1, fullCode.Length - 2);
-        }
-
-        var bars = GetBarsCodabar(generateChecksum ? CalculateChecksum(code) : code);
-        var wide = 0;
-        for (var k = 0; k < bars.Length; ++k)
-        {
-            wide += bars[k];
-        }
-
-        var narrow = bars.Length - wide;
-        var fullWidth = narrow + wide * (int)n;
-        var height = (int)barHeight;
-        var bmp = new SKBitmap(fullWidth, height);
-        for (var h = 0; h < height; ++h)
-        {
-            var print = true;
-            var ptr = 0;
-            for (var k = 0; k < bars.Length; ++k)
-            {
-                var w = bars[k] == 0 ? 1 : (int)n;
-                var c = background;
-                if (print)
-                {
-                    c = foreground;
-                }
-
-                print = !print;
-                for (var j = 0; j < w; ++j)
-                {
-                    bmp.SetPixel(ptr++, h, c.ToSKColor());
-                }
-            }
-        }
-
-        return bmp;
     }
 
     /// <summary>

@@ -1,9 +1,6 @@
-using System.Drawing;
-using System.util;
-using iTextSharp.LGPLv2.Core.System.Drawing;
+﻿using System.util;
 using iTextSharp.LGPLv2.Core.System.Encodings;
 using iTextSharp.text.pdf.codec;
-using SkiaSharp;
 
 namespace iTextSharp.text.pdf;
 
@@ -240,40 +237,6 @@ public class BarcodeDatamatrix
     ///     Gets/sets the whitespace border around the barcode.
     /// </summary>
     public int Ws { get; set; }
-
-    /// <summary>
-    ///     Creates a  java.awt.Image . A successful call to the method  generate()
-    ///     before calling this method is required.
-    /// </summary>
-    /// <param name="foreground">the color of the bars</param>
-    /// <param name="background">the color of the background</param>
-    /// <returns>the image</returns>
-    public virtual SKBitmap CreateDrawingImage(Color foreground, Color background)
-    {
-        if (BitImage == null)
-        {
-            return null;
-        }
-
-        var h = Height + 2 * Ws;
-        var w = Width + 2 * Ws;
-        var stride = (w + 7) / 8;
-        var bmp = new SKBitmap(w, h);
-
-        for (var k = 0; k < h; ++k)
-        {
-            var p = k * stride;
-
-            for (var j = 0; j < w; ++j)
-            {
-                var b = BitImage[p + j / 8] & 0xff;
-                b <<= j % 8;
-                bmp.SetPixel(j, k, (b & 0x80) == 0 ? background.ToSKColor() : foreground.ToSKColor());
-            }
-        }
-
-        return bmp;
-    }
 
     /// <summary>
     ///     Gets an  Image  with the barcode. A successful call to the method  generate()

@@ -6,7 +6,6 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.codec;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SkiaSharp;
 using Document = iTextSharp.text.Document;
 
 namespace iTextSharp.LGPLv2.Core.FunctionalTests;
@@ -59,88 +58,88 @@ public class TiffImageTests
         TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
     }
 
-    [TestMethod]
-    public void Verify_TIFF_Image_CanBeAddedToPdfDocument()
-    {
-        var fileName = Path.Combine(TestUtils.GetBaseDir(), "iTextExamples", "resources", "img", "test.tif");
-        var pdfFilePath = TestUtils.GetOutputFileName();
+    //[TestMethod]
+    //public void Verify_TIFF_Image_CanBeAddedToPdfDocument()
+    //{
+    //    var fileName = Path.Combine(TestUtils.GetBaseDir(), "iTextExamples", "resources", "img", "test.tif");
+    //    var pdfFilePath = TestUtils.GetOutputFileName();
 
-        // It uses BitMiracle.LibTiff.NET package
-        // https://github.com/BitMiracle/libtiff.net
-        using (var tiff = Tiff.Open(fileName, "r"))
-        {
-            if (tiff == null)
-            {
-                throw new InvalidOperationException("Could not open the incoming image");
-            }
+    //    // It uses BitMiracle.LibTiff.NET package
+    //    // https://github.com/BitMiracle/libtiff.net
+    //    using (var tiff = Tiff.Open(fileName, "r"))
+    //    {
+    //        if (tiff == null)
+    //        {
+    //            throw new InvalidOperationException("Could not open the incoming image");
+    //        }
 
-            var skBitmap = ConvertToSKBitmap(tiff);
-            var img = Image.GetInstance(skBitmap, SKEncodedImageFormat.Jpeg);
+    //        var skBitmap = ConvertToSKBitmap(tiff);
+    //        var img = Image.GetInstance(skBitmap, SKEncodedImageFormat.Jpeg);
 
-            img.ScaleAbsolute(img.Width, img.Height);
-            img.SetAbsolutePosition(0, 0);
-            img.SetDpi(img.DpiX, img.DpiY);
+    //        img.ScaleAbsolute(img.Width, img.Height);
+    //        img.SetAbsolutePosition(0, 0);
+    //        img.SetDpi(img.DpiX, img.DpiY);
 
-            using (var stream = new FileStream(pdfFilePath, FileMode.Create))
-            {
-                using (var document = new Document(img, 0, 0, 0, 0))
-                {
-                    var writer = PdfWriter.GetInstance(document, stream);
-                    writer.CompressionLevel = PdfStream.NO_COMPRESSION;
+    //        using (var stream = new FileStream(pdfFilePath, FileMode.Create))
+    //        {
+    //            using (var document = new Document(img, 0, 0, 0, 0))
+    //            {
+    //                var writer = PdfWriter.GetInstance(document, stream);
+    //                writer.CompressionLevel = PdfStream.NO_COMPRESSION;
 
-                    document.Open();
-                    document.AddAuthor(TestUtils.Author);
-                    document.Add(img);
-                }
-            }
-        }
+    //                document.Open();
+    //                document.AddAuthor(TestUtils.Author);
+    //                document.Add(img);
+    //            }
+    //        }
+    //    }
 
-        TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
-    }
+    //    TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+    //}
 
-    [TestMethod]
-    public void Verify_Multi_Page_TIFF_Image_CanBeAddedToPdfDocument()
-    {
-        var fileName = Path.Combine(TestUtils.GetBaseDir(), "iTextExamples", "resources", "img", "multipage.tif");
-        var pdfFilePath = TestUtils.GetOutputFileName();
+    //[TestMethod]
+    //public void Verify_Multi_Page_TIFF_Image_CanBeAddedToPdfDocument()
+    //{
+    //    var fileName = Path.Combine(TestUtils.GetBaseDir(), "iTextExamples", "resources", "img", "multipage.tif");
+    //    var pdfFilePath = TestUtils.GetOutputFileName();
 
-        // It uses BitMiracle.LibTiff.NET package
-        // https://github.com/BitMiracle/libtiff.net
-        using (var tiff = Tiff.Open(fileName, "r"))
-        {
-            if (tiff == null)
-            {
-                throw new InvalidOperationException("Could not open the incoming image");
-            }
+    //    // It uses BitMiracle.LibTiff.NET package
+    //    // https://github.com/BitMiracle/libtiff.net
+    //    using (var tiff = Tiff.Open(fileName, "r"))
+    //    {
+    //        if (tiff == null)
+    //        {
+    //            throw new InvalidOperationException("Could not open the incoming image");
+    //        }
 
-            using (var stream = new FileStream(pdfFilePath, FileMode.Create))
-            {
-                using (var document = new Document())
-                {
-                    var writer = PdfWriter.GetInstance(document, stream);
-                    writer.CompressionLevel = PdfStream.NO_COMPRESSION;
+    //        using (var stream = new FileStream(pdfFilePath, FileMode.Create))
+    //        {
+    //            using (var document = new Document())
+    //            {
+    //                var writer = PdfWriter.GetInstance(document, stream);
+    //                writer.CompressionLevel = PdfStream.NO_COMPRESSION;
 
-                    document.Open();
-                    document.AddAuthor(TestUtils.Author);
+    //                document.Open();
+    //                document.AddAuthor(TestUtils.Author);
 
-                    do
-                    {
-                        var skBitmap = ConvertToSKBitmap(tiff);
-                        var img = Image.GetInstance(skBitmap, SKEncodedImageFormat.Jpeg);
-                        img.ScaleAbsolute(img.Width, img.Height);
-                        img.SetAbsolutePosition(0, 0);
-                        img.SetDpi(img.DpiX, img.DpiY);
+    //                do
+    //                {
+    //                    var skBitmap = ConvertToSKBitmap(tiff);
+    //                    var img = Image.GetInstance(skBitmap, SKEncodedImageFormat.Jpeg);
+    //                    img.ScaleAbsolute(img.Width, img.Height);
+    //                    img.SetAbsolutePosition(0, 0);
+    //                    img.SetDpi(img.DpiX, img.DpiY);
 
-                        document.Add(img);
-                        document.NewPage();
-                    }
-                    while (tiff.ReadDirectory());
-                }
-            }
-        }
+    //                    document.Add(img);
+    //                    document.NewPage();
+    //                }
+    //                while (tiff.ReadDirectory());
+    //            }
+    //        }
+    //    }
 
-        TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
-    }
+    //    TestUtils.VerifyPdfFileIsReadable(pdfFilePath);
+    //}
 
     private static int CalculatePageNumbers(Tiff image)
     {
@@ -156,35 +155,35 @@ public class TiffImageTests
     }
 
     // Convert a TIFF stream to a SKBitmap
-    public static SKBitmap ConvertToSKBitmap(Tiff tiff)
-    {
-        // read the dimensions
-        var width = tiff.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
-        var height = tiff.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
+    //public static SKBitmap ConvertToSKBitmap(Tiff tiff)
+    //{
+    //    // read the dimensions
+    //    var width = tiff.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
+    //    var height = tiff.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
 
-        // create the bitmap
-        var bitmap = new SKBitmap();
-        var info = new SKImageInfo(width, height);
+    //    // create the bitmap
+    //    var bitmap = new SKBitmap();
+    //    var info = new SKImageInfo(width, height);
 
-        // create the buffer that will hold the pixels
-        var raster = new int[width * height];
+    //    // create the buffer that will hold the pixels
+    //    var raster = new int[width * height];
 
-        // get a pointer to the buffer, and give it to the bitmap
-        var ptr = GCHandle.Alloc(raster, GCHandleType.Pinned);
-        bitmap.InstallPixels(info, ptr.AddrOfPinnedObject(), info.RowBytes, null, null);
+    //    // get a pointer to the buffer, and give it to the bitmap
+    //    var ptr = GCHandle.Alloc(raster, GCHandleType.Pinned);
+    //    bitmap.InstallPixels(info, ptr.AddrOfPinnedObject(), info.RowBytes, null, null);
 
-        // read the image into the memory buffer
-        if (!tiff.ReadRGBAImageOriented(width, height, raster, Orientation.TOPLEFT))
-        {
-            throw new Exception("Not a valid TIF image.");
-        }
+    //    // read the image into the memory buffer
+    //    if (!tiff.ReadRGBAImageOriented(width, height, raster, Orientation.TOPLEFT))
+    //    {
+    //        throw new Exception("Not a valid TIF image.");
+    //    }
 
-        // swap the red and blue because SkiaSharp may differ from the tiff
-        if (SKImageInfo.PlatformColorType == SKColorType.Bgra8888)
-        {
-            SKSwizzle.SwapRedBlue(ptr.AddrOfPinnedObject(), raster.Length);
-        }
+    //    // swap the red and blue because SkiaSharp may differ from the tiff
+    //    if (SKImageInfo.PlatformColorType == SKColorType.Bgra8888)
+    //    {
+    //        SKSwizzle.SwapRedBlue(ptr.AddrOfPinnedObject(), raster.Length);
+    //    }
 
-        return bitmap;
-    }
+    //    return bitmap;
+    //}
 }
